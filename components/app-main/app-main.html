@@ -1,0 +1,12 @@
+<form class="ui form">
+
+  <div class="ui fluid button" v-on:click="$refs.inputFileUploadTrigger.click()">
+    Select Discussion Export File
+  </div>
+  <input type="file" class="input-field" ref="inputFileUploadTrigger" id="input_file"
+            accept=".xlsx" v-on:change="loadInputFile"
+            v-on:change="loadInputFile" />
+
+  <a href="assets/topic_export.xlsx">Example</a>
+  
+</form>
