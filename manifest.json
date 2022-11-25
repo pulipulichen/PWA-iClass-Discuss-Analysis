@@ -1,11 +1,11 @@
 {
-  "name": "Icon Builder",
-  "short_name": "IconBuilder",
+  "name": "iClass Disscussion Analysis",
+  "short_name": "DissAna",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#3498DB",
   "theme_color": "#2980B9",
-  "description": "Convert a image to a square icon.",
+  "description": "An analysis tool for iClass discussion forum.",
   "icons": [{
    "src": "assets/favicon/icon/android-icon-36x36.png",
    "sizes": "36x36",

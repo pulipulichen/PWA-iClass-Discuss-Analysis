@@ -7,12 +7,18 @@ let appMain = {
     
     return {
       cacheKey: 'iClass-Discuss-Analysis',
-      cacheAttrs: ['YouTubeURL', 'iconURL', 'youtubeHorizontalPercentage', 'iconPaddingPercentage', 'iconPosition'],
+      cacheAttrs: ['splitorSpace', 'splitorSlash', 'splitorColon', 'input'],
       init: false,
+
+      splitorSpace: false,
+      splitorSlash: true,
+      splitorColon: true,
       
-      inputText: ``,
-      processOutputWait: false,
-      inputFilename: ``
+      input: ``,
+      inputExample: null,
+      inputExamplePath: `./assets/inputExample.txt`,
+
+      resultRows: []
     }
   },
   mounted () {
@@ -20,11 +26,16 @@ let appMain = {
     
     this.inited = true
 
+    setTimeout(() => {
+      this.setExample()
+    }, 1000)
   },
-  computed: {
-  },
+  // computed: {
+  // },
   watch: {
-    
+    resultRows () {
+      this.setJQCloud()
+    },
   },
   methods: {
     dataLoad () {
@@ -53,100 +64,185 @@ let appMain = {
       data = JSON.stringify(data)
       localStorage.setItem(this.cacheKey, data)
     },
-    loadInputFile(evt) {
-      //console.log(1);loadInputFile
-      if (!window.FileReader) {
-        return false; // Browser is not compatible
-      }
-  
-      this.processOutputWait = true
-      var reader = new FileReader();
-      let filename = evt.target.files[0].name
-      let type = evt.target.files[0].type
-      //console.log(type)
-      if (filename.indexOf('.') > -1) {
-        filename = filename.slice(0, filename.lastIndexOf('.'))
-      }
-      this.inputFilename = filename
-  
-      reader.onload = async (evt) => {
-        // console.log(evt)
-        if (evt.target.readyState !== 2) {
-          this.processOutputWait = false
-          return;
-        }
-        if (evt.target.error) {
-          alert('Error while reading file');
-          this.processOutputWait = false
-          return;
-        }
-  
-        let result = evt.target.result
-        // console.log(type, result)
-        if (type === 'application/vnd.oasis.opendocument.spreadsheet' || 
-            type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'|| 
-            type === 'application/wps-office.xlsx') {
-          this.inputText = await this.processUploadTypeSheet(result)
-        }
-        // } else if (type === 'application/vnd.oasis.opendocument.text') {
-        //   this.inputText = await this.processUploadTypeODT(result)
-        // } else if (type === 'text/html') {
-        //   this.inputText = this.processUploadTypeHTML(result)
-        // } else if (type === 'text/csv') {
-        //   this.inputText = await this.processUploadTypeCSV(result)
-        // } else {
-        //   this.inputText = result
-        // }
-        this.$refs.inputFileUploadTrigger.value = ''
-        this.processOutputWait = false
-        
-        // this.initInputOptions()
+    
+    setExample () {
+      if (!this.inputExample) {
+        $.get(this.inputExamplePath, result => {
+          this.inputExample = result
+          this.input = this.inputExample
 
-        //console.log(this.config.session.inputText)
+          this.analysisDiscuss()
+        })
+        return false
       }
-  
-      if (type === 'application/vnd.oasis.opendocument.spreadsheet' || 
-          type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-        let size = evt.target.files[0].size
-        console.log('size', size)
-        if (size > 25000000) {
-          window.alert('ODS/XLSX檔案大小請低於2.5MB。')
-          this.processOutputWait = false
+      else {
+        this.input = this.inputExample
+
+        this.analysisDiscuss()
+      }
+    },
+
+    analysisDiscuss () {
+      if (this.input.trim() === '') {
+        return false
+      }
+
+      let termsCount = {}
+      this.input.trim().split('\n').forEach(line => {
+        let parts = line.split('\t')
+
+        if (parts.length < 2) {
           return false
         }
-  
-        reader.readAsBinaryString(evt.target.files[0])
-      } else {
-        reader.readAsText(evt.target.files[0])
-      }
-    },
-    processUploadTypeSheet: async function (input) {
-      console.log(input)
-      var workbook = XLSX.read(input, {type: 'binary'});
-  
-      console.log(workbook)
-      return workbook.SheetNames
 
-      var result = [];
-      for (let i in workbook.SheetNames) {
-        let sheetName = workbook.SheetNames[i]
+        let type = parts[0]
+        if (type !== '文章') {
+          return false
+        }
+
+        let terms = this.splitTerms(parts[1])
+
+        terms.forEach(t => {
+          // t = t.trim()
+
+          if (!termsCount[t]) {
+            termsCount[t] = 0
+          }
+          termsCount[t]++
+        })
+      })
+
+      let output = Object.keys(termsCount).map(t => {
+        return {
+          term: t,
+          text: t,
+          count: termsCount[t],
+          weight: termsCount[t]
+        }
+      })
+
+      output.sort((a, b) => {
+        return b.count - a.count
+      })
+
+      this.resultRows = output
   
-        var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], {
-          FS: '\t',
-          blankrows: false
-        });
-  
-        //console.log(csv)
-        result.push(csv.trim())
-      }
-  
-      result = result.join('\n')
-      result = result.split('\n').map(line => line.trim()).filter(line => (line !== '')).join('\n')
-  
-      console.log(result)
-      return result
+      // $('#jqcloud').jQCloud('update', words);
     },
+    splitTerms (str) {
+      let terms = [str]
+      
+      if (this.splitorSpace) {
+        terms = this.splitTermsProcess(terms, [' ', '　'])
+      }
+      if (this.splitorSlash) {
+        terms = this.splitTermsProcess(terms, ['|', '/', '\\', '／', '-'])
+      }
+
+      if (this.splitorColon) {
+        terms = this.splitTermsProcess(terms, [',', ':', ':', '：', '、'])
+      }
+
+      return terms
+    },
+    splitTermsProcess (terms, splitor) {
+      if (Array.isArray(splitor)) {
+        for (let i = 0; i < splitor.length; i++) {
+          terms = this.splitTermsProcess(terms, splitor[i])
+        }
+        return terms
+      }
+
+      let tmp = []
+
+      terms.forEach(term => {
+        term.split(splitor).forEach(term => {
+          term = term.trim()
+          term = term.toLowerCase()
+
+          if (term !== '') {
+            tmp.push(term)
+          }
+        })
+      })
+
+      return tmp
+    },
+    setJQCloud () {
+
+      // console.log(this.resultRows)
+      // $(this.$refs.jQCloud).jQCloud(this.resultRows);
+      /*
+      var words = [
+        {text: "Lorem", weight: 13},
+        {text: "Ipsum", weight: 10.5},
+        {text: "Dolor", weight: 9.4},
+        {text: "Sit", weight: 8},
+        {text: "Amet", weight: 6.2},
+        {text: "Consectetur", weight: 5},
+        {text: "Adipiscing", weight: 5},
+      ];
+      
+      $('#jqcloud').jQCloud(words);
+      console.log($('#jqcloud')[0])
+      */
+
+      // var words = [
+      //   {text: "Lorem", weight: 13},
+      //   {text: "Ipsum", weight: 10.5},
+      //   {text: "Dolor", weight: 9.4},
+      //   {text: "Sit", weight: 8},
+      //   {text: "Amet", weight: 6.2},
+      //   {text: "Consectetur", weight: 5},
+      //   {text: "Adipiscing", weight: 5},
+      // ];
+
+      let words = []
+      this.resultRows.forEach(({term, count}) => {
+        words.push({
+          text: term,
+          weight: count,
+          handlers: {
+            click: function () {
+              let term = this.innerText.trim()
+              let element = document.getElementById(`term_${term}`)
+              element.scrollIntoView({ behavior: 'smooth', block: 'start'});
+              $(element).addClass('focus')
+              setTimeout(() => {
+                $(element).removeClass('focus')
+              }, 3000)
+            }
+          }
+        })
+      })
+
+      let options = {
+        autoResize: true
+      }
+
+      if ($('#jqcloud').children().length === 0) {
+        // $('#jqcloud').jQCloud(words, options)
+        $('#jqcloud').jQCloud(words, options)
+      }
+      else {
+        $('#jqcloud').jQCloud('update', words, options)
+      }
+      
+    }
   }
 }
+
+// ----------------------------------------------------------------
+
+appMain.data().cacheAttrs.forEach(attr => {
+  if (!appMain.watch[attr]) {
+    appMain.watch[attr] = function () {
+      this.dataSave()
+    }
+  }
+})
+
+
+// ----------------------------------------------------------------
 
 module.exports = appMain
