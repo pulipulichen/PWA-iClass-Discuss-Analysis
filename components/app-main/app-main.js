@@ -140,7 +140,7 @@ let appMain = {
       }
 
       if (this.splitorColon) {
-        terms = this.splitTermsProcess(terms, [',', ':', ':', '：', '、'])
+        terms = this.splitTermsProcess(terms, [',', ':', ':', '：', '、', '；', '，', '。'])
       }
 
       return terms
