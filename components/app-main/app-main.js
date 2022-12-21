@@ -18,7 +18,11 @@ let appMain = {
       inputExample: null,
       inputExamplePath: `./assets/inputExample.txt`,
 
-      resultRows: []
+      resultRows: [],
+      allowPostType: [
+        '文章',
+        'Topics'
+      ]
     }
   },
   mounted () {
@@ -96,7 +100,7 @@ let appMain = {
         }
 
         let type = parts[0]
-        if (type !== '文章') {
+        if (this.allowPostType.indexOf(type) === -1) {
           return false
         }
 
