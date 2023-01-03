@@ -24,7 +24,14 @@ let app = {
     
   },
   methods: {
-    
+    focus (id) {
+      let element = document.getElementById(id)
+      if (!element) {
+        return false
+      }
+
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', });
+    }
   }
 }
 

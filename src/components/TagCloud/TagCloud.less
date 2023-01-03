@@ -3,8 +3,17 @@
 }
 
 .invisible {
-  position: fixed;
+  // position: fixed !important;
+  // position: absolute !important;
   left: 120vw;
+  // top: -200vh;
+
+  // #jqcloud {
+  //   height: 0rem !important;
+  // }
+  // display: none;
+  height: 0 !important;
+  overflow-y: hidden;
 }
 
 .TagCloud::v-deep .jqcloud-word {
@@ -72,7 +81,7 @@
   .jqcloud-word.w10 {
     color: #00ccff;
     font-size: 550%;
-    margin-top: 2rem !important;
+    // margin-top: 2rem !important;
   }
   .jqcloud-word a {
     color: inherit;

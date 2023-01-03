@@ -1,5 +1,4 @@
-<div class="FilterController ui grid"
-  v-if="db.localConfig.files.length > 0">
+<div class="FilterController ui grid">
   <div class="equal width row">
     <h2 class="ui header column">
       {{ $t('Filters') }}
@@ -7,7 +6,8 @@
   </div>
     
 
-  <div class="equal width row">
+  <div class="equal width row"
+    v-if="db.localConfig.files.length > 0">
     <div class="column">
       <div class="ui checkbox">
         <input type="checkbox" 
@@ -53,7 +53,8 @@
     </div>
   </div>
 
-  <div class="equal width row">
+  <div class="equal width row"
+    v-if="db.localConfig.files.length > 0">
     <div class="column">
       <div class="ui checkbox">
         <input type="checkbox" 
@@ -95,5 +96,11 @@
       </button>
     </div>
   </div>
-    
+
+  <div class="equal width row ui form">
+    <div class="column field">
+      <textarea v-model="db.localConfig.analysisResult"
+        :disabled="db.config.isAnalyzing"></textarea>
+    </div>
+  </div>
 </div>

@@ -1,11 +1,12 @@
 
 import PuliPostMessageAPI from './puli-post-message-api/puli-post-message-api.js'
+let debug = false
 let inited = false
 let api
 
 let url = 'https://pulipulichen.github.io/jieba-js/index.html?api=1'
-if (location.href.startsWith('http://localhost:8383/')) {
-  url = 'http://localhost:8383/jieba-js/index.html?api=1'
+if (location.href.startsWith('http://127.0.0.1:')) {
+  url = 'http://127.0.0.1:5501/index.html?api=1'
 }
 
 export default {
@@ -33,7 +34,7 @@ export default {
     //console.log(data)
     let data = text
     
-    let result = await api.send(url, data, {debug: false})
+    let result = await api.send(url, data, {debug})
     
     if (isArray === true) {
       result = result.split('\n')

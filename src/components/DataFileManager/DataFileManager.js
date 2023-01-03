@@ -14,9 +14,9 @@ let app = {
       this.parseAnalysisResult()
     },
     'db.config.inited' (inited) {
-      if (inited === true) {
-        this.initAnalyze()
-      }
+      // if (inited === true) {
+      this.initAnalyze()
+      // }
     },
   },
   computed: {},
@@ -26,9 +26,10 @@ let app = {
   methods: {
     
     initAnalyze: async function () {
+      // return false
       
-      await this.db.utils.AsyncUtils.sleep(1000)
-
+      await this.db.utils.AsyncUtils.sleep(3000)
+      // console.log('go')
       await this.startAnalyze()
       this.parseAnalysisResult()
     },
@@ -119,6 +120,10 @@ let app = {
         let countMap = {}
 
         parts.forEach((part) => {
+          if (part === '') {
+            return false
+          }
+
           if (!countMap[part]) {
             countMap[part] = 0
           }
