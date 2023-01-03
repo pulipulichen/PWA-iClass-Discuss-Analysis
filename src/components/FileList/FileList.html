@@ -1,0 +1,27 @@
+<div class="FileList ui raised segment"
+  v-if="db.localConfig.files.length > 0"> 
+  <div class="ui vertical segment"
+    v-for="file in db.localConfig.files">
+    <div class="file-row">
+      <div class="file-title">
+        {{ file.filename }}
+      </div>
+      <div class="meta">
+        <div class="ui checkbox">
+          <input type="checkbox" 
+            v-model="file.enable"
+            :id="file.filename + '_enable'">
+          <label
+            :for="file.filename + '_enable'">{{ $t('Enable') }}</label>
+        </div>
+        <div class="buttons">
+          <button type="button"
+            class="ui icon button"
+            @click="removeFile(file.filename)">
+            <i class="x icon" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

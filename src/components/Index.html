@@ -1,0 +1,46 @@
+<div class="Index"
+  v-show="db.config.inited">
+
+  <NavigationBar 
+    ref="NavigationBar"
+    :db="db">
+  </NavigationBar>
+
+  <FileController 
+    ref="FileController"
+    :db="db">
+  </FileController>
+
+  <FileList 
+    ref="FileList"
+    :db="db">
+  </FileList>
+
+  <FilterController 
+    ref="FilterController"
+    :db="db">
+  </FilterController>
+
+  <TagCloud 
+    ref="TagCloud"
+    :db="db">
+  </TagCloud>
+
+  <TagList 
+    ref="TagList"
+    :db="db">
+  </TagList>
+
+  <!-- ======================================= -->
+
+  <DropZone 
+    ref="DropZone"
+    :db="db">
+  </DropZone>
+
+  <DataFileManager 
+    ref="DataFileManager"
+    :db="db">
+  </DataFileManager>
+
+</div>

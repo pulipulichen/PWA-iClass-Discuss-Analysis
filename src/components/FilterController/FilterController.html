@@ -1,0 +1,99 @@
+<div class="FilterController ui grid"
+  v-if="db.localConfig.files.length > 0">
+  <div class="equal width row">
+    <h2 class="ui header column">
+      {{ $t('Filters') }}
+    </h2>
+  </div>
+    
+
+  <div class="equal width row">
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.targetFieldTitle"
+          id="filter_targetFieldTitle" />
+        <label
+          for="filter_targetFieldTitle">
+          {{ $t('Include Title') }}
+        </label>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.targetFieldContent"
+          id="filter_targetFieldContent" />
+        <label
+          for="filter_targetFieldContent">
+          {{ $t('Include Content') }}
+        </label>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.onlyStudent"
+          id="filter_onlyStudent">
+        <label
+          for="filter_onlyStudent">{{ $t('Only Student') }}</label>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.onlyPost"
+          id="filter_onlyPost">
+        <label
+          for="filter_onlyPost">{{ $t('Only Post') }}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="equal width row">
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.filterColon"
+          id="filter_filterColon">
+        <label
+          for="filter_filterColon">{{ $t('Colon') }}</label>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.filterSlash"
+          id="filter_filterSlash">
+        <label
+          for="filter_filterSlash">{{ $t('Slash') }}</label>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.filterSegment"
+          id="filter_filterSegment">
+        <label
+          for="filter_filterSegment">{{ $t('Segment') }}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="equal width row">
+    <div class="column">
+      <button type="button"
+        class="ui fluid button"
+        :class="{disabled: disableAnalyze}"
+        @click="startAnalyze">
+        {{ $t('Analyze') }}
+      </button>
+    </div>
+  </div>
+    
+</div>

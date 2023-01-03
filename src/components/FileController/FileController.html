@@ -1,0 +1,19 @@
+<div class="FileController">
+  <h2 class="ui header">
+    {{ $t('Files') }}
+  </h2>
+  <button type="button"
+    class="ui labeled icon button"
+    @click="$refs.File.click()">
+    <i class="folder open icon"></i>
+    {{ $t('Open') }}
+  </button>
+  <input type="file" ref="File" @change="importFilesByEvent" />
+  <button type="button"
+    class="ui labeled icon button"
+    :class="{disabled: (db.localConfig.files.length === 0)}"
+    @click="emptyFiles">
+    <i class="trash icon"></i>
+    {{ $t('Clean') }}
+  </button>
+</div>

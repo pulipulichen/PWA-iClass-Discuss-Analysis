@@ -1,0 +1,192 @@
+let app = {
+  props: ['db'],
+  components: {},
+  data () {    
+    this.$i18n.locale = this.db.localConfig.locale
+    return {
+    }
+  },
+  watch: {
+    'db.localConfig.locale'() {
+      this.$i18n.locale = this.db.localConfig.locale;
+    },
+    'db.localConfig.analysisResult'() {
+      this.parseAnalysisResult()
+    },
+    'db.config.inited' (inited) {
+      if (inited === true) {
+        this.initAnalyze()
+      }
+    },
+  },
+  computed: {},
+  mounted() {
+    this.initUtils()
+  },
+  methods: {
+    
+    initAnalyze: async function () {
+      
+      await this.db.utils.AsyncUtils.sleep(1000)
+
+      await this.startAnalyze()
+      this.parseAnalysisResult()
+    },
+    startAnalyze: async function () {
+      
+      if (this.db.localConfig.files.length === 0) {
+        return false
+      }
+
+      this.db.config.isAnalyzing = true
+      this.db.config.resultRows = []
+
+      let output = []
+
+      for (let i = 0; i < this.db.localConfig.files.length; i++) {
+        let file = this.db.localConfig.files[i]
+        if (file.enable === false) {
+          continue
+        }
+        let content = file.content
+        // console.log(content)
+        let record = content['回覆紀錄']
+        if (!record) {
+          record = content.Replies
+        }
+
+        // console.log(record)
+
+        for (let j = 1; j < record.length; j++) {
+          let row = record[j]
+
+          // console.log(row)
+
+          let rowOutput = []
+          // row = this.filterRow(row)
+          let type = row[2]
+          let role = row[8]
+
+          let title = row[3]
+          let content = row[9]
+
+          // console.log({type, role, title, content})
+
+          // console.log(row)
+          if (this.db.localConfig.onlyPost && 
+             !(type === 'Topic' || type === '文章') ) {
+            continue
+          }
+
+          if (this.db.localConfig.onlyStudent && 
+              !(role == '學生' || role === 'Student')) {
+            continue
+          }
+
+          if (this.db.localConfig.targetFieldTitle) {
+            rowOutput.push(await this.filterText(title))
+          }
+
+          if (this.db.localConfig.targetFieldContent) {
+            rowOutput.push(await this.filterText(content))
+          }
+
+          output.push(rowOutput)
+        }
+      }
+
+      this.db.localConfig.analysisResult = output.map(row => row.join('\t')).join('\n')
+      
+      // console.log(this.db.localConfig.analysisResult)
+
+    },
+    parseAnalysisResult () {
+      let analysisResult = this.db.localConfig.analysisResult
+      analysisResult = analysisResult.trim()
+
+      if (analysisResult === '') {
+        this.db.config.resultRows = []
+        return false
+      }
+      // console.log(analysisResult)
+      clearTimeout(this.timer)
+
+      this.timer = setTimeout(() => {
+        analysisResult = analysisResult.replace(/\n/g, ' ')
+        analysisResult = analysisResult.replace(/\t/g, ' ')
+        let parts = analysisResult.split(' ')
+
+        let countMap = {}
+
+        parts.forEach((part) => {
+          if (!countMap[part]) {
+            countMap[part] = 0
+          }
+          countMap[part]++
+        })
+
+        let resultRows = Object.keys(countMap).map((key) => {
+          return {
+            term: key,
+            count: countMap[key]
+          }
+        })
+
+        resultRows.sort((a, b) => {
+          return (b.count - a.count)
+        })
+
+        this.db.config.resultRows = resultRows
+        this.db.config.isAnalyzing = false
+      }, 300)
+    },
+    filterText: async function (text) {
+      text = text.trim().split(' ')
+      if (this.db.localConfig.filterColon) {
+        text = this.splitTermsProcess(text, [',', ':', ':', '：', '、', '；', '，', '。', '（', '(', ')', '）', '.', '「', '」', ';', ' ', '?', '？', '《', '》', '=', '-'])
+      }
+
+      if (this.db.localConfig.filterSlash) {
+        text = this.splitTermsProcess(text, ['|', '/', '\\', '／', '-'])
+      }
+
+      if (this.db.localConfig.filterSegment) {
+        text = await this.db.utils.TokenizeUtils.tokenize(text)
+        // console.error('@TODO')
+      }
+
+      text = this.splitTermsProcess(text, ' ')
+      // text = text.trim()
+
+      return text.join(' ')
+    },
+    splitTermsProcess (terms, splitor) {
+      if (Array.isArray(splitor)) {
+        for (let i = 0; i < splitor.length; i++) {
+          terms = this.splitTermsProcess(terms, splitor[i])
+        }
+        return terms
+      }
+
+      let tmp = []
+
+      terms.forEach(term => {
+        term.split(splitor).forEach(term => {
+          term = term.trim()
+          term = term.toLowerCase()
+
+          if (term !== '') {
+            tmp.push(term)
+          }
+        })
+      })
+
+      return tmp
+    },
+  }
+}
+
+import DataFileManagerMethods from './DataFileManagerMethods.js';
+DataFileManagerMethods(app)
+
+export default app

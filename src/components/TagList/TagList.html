@@ -1,0 +1,15 @@
+<table class="TagList ui unstackable celled table" v-if="db.config.resultRows.length > 0">
+  <thead>
+    <tr>
+      <th>{{ $t('Term') }}</th>
+      <th>{{ $t('Count') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="row in db.config.resultRows"
+        :id="'term_' + row.term">
+      <td :data-label="$t('Term')">{{ row.term }}</td>
+      <td :data-label="$t('Count')">{{ row.count }}</td>
+    </tr>
+  </tbody>
+</table>

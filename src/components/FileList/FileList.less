@@ -1,0 +1,30 @@
+.FileList {
+  max-height: 30rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+
+  .file-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+
+    width: 100%;
+  }
+
+  .meta {
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+
+    .checkbox {
+      margin-right: 0.5rem;
+    }
+  }
+}
