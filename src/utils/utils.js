@@ -11,6 +11,8 @@ import DateUtils from './DateUtils.js'
 import TokenizeUtils from './TokenizeUtils.js'
 import './date-helper.js'
 
+import postMessageAPI from './puli-post-message-api/puli-post-message-api.js'
+
 export default {
   AsyncUtils,
   ClipboardUtils,
@@ -22,5 +24,6 @@ export default {
   StringUtils,
   FileSystemUtils,
   DateUtils,
+	postMessageAPI,
   TokenizeUtils
 }

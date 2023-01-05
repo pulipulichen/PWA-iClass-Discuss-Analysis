@@ -17,7 +17,7 @@ export default {
     }
     return 'token-' + text
   },
-  tokenize: async function (text) {
+  tokenize: async function (text, filter = {}) {
     
     this.init()
     let key = this.generateKey(text)
@@ -32,15 +32,23 @@ export default {
     }
     
     //console.log(data)
-    let data = text
-    
-    let result = await api.send(url, data, {debug})
-    
-    if (isArray === true) {
-      result = result.split('\n')
-      result.shift()
+    let data = {
+      inputText: text,
+      ...filter
     }
     
+
+    let result = await api.send(url, data, {
+      debug
+    })
+    
+    // console.log(isArray, {text}, result)
+
+    if (isArray === true) {
+      result = result.split('\n')
+      // result.shift()
+    }
+
     this.cache[key] = result
     return result
   },

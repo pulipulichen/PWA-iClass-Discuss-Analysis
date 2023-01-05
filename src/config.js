@@ -3,6 +3,7 @@ let appName = 'PWA-iClass-Discuss-Analysis'
 let config = {
   version: '20230103-1153',
   resultRows: [],
+	clusterResults: [],
   isAnalyzing: false
 }
 

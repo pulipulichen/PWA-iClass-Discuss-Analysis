@@ -93,6 +93,7 @@ export default function (app) {
       })
 
       if (this.db.localConfig.analysisResult === ``) {
+        // console.log('startAnalyze')
         this.startAnalyze()
       }
     }

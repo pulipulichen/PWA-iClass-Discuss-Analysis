@@ -21,10 +21,15 @@
     :db="db">
   </FilterController>
 
-  <TagCloud 
-    ref="TagCloud"
+  <TermsRelationshipNetwork 
+    ref="TermsRelationshipNetwork"
     :db="db">
-  </TagCloud>
+  </TermsRelationshipNetwork>
+  
+	<ClustersList 
+		ref="ClustersList"
+		:db="db">
+	</ClustersList>
 
   <TagList 
     ref="TagList"

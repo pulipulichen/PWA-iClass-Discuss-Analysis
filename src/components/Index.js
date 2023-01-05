@@ -11,6 +11,8 @@ let Index = {
     FilterController: () => import(/* webpackChunkName: "components/FilterController" */ './FilterController/FilterController.vue'),
     TagCloud: () => import(/* webpackChunkName: "components/TagCloud" */ './TagCloud/TagCloud.vue'),
     TagList: () => import(/* webpackChunkName: "components/TagList" */ './TagList/TagList.vue'),
+		ClustersList: () => import(/* webpackChunkName: "components/ClustersList" */ './ClustersList/ClustersList.vue'),
+    TermsRelationshipNetwork: () => import(/* webpackChunkName: "components/TermsRelationshipNetwork" */ './TermsRelationshipNetwork/TermsRelationshipNetwork.vue'),
   },
   data() {
     this.$i18n.locale = this.db.config.localConfig
@@ -36,9 +38,24 @@ let Index = {
     },
   },
   mounted() {
-    
+    this.setupAPI()
   },
   methods: {
+		setupAPI() {
+      this.db.utils.postMessageAPI.addReceiveListener(async (data) => {
+        // console.log('收到資料了', data)
+				this.db.localConfig.files = []
+
+        if (typeof (data) === 'string') {
+          this.db.localConfig.analysisResult = data
+        } else {
+          for (let key in data) {
+            this.db.localConfig[key] = data[key]
+          }
+        }
+      })
+      //console.log('設定好了')
+    },
   }
 }
 // import IndexMethodsPostMessage from './IndexMethodsPostMessage.js'

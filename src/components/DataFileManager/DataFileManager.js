@@ -30,8 +30,13 @@ let app = {
       
       await this.db.utils.AsyncUtils.sleep(3000)
       // console.log('go')
-      await this.startAnalyze()
-      this.parseAnalysisResult()
+      if (this.db.localConfig.analysisResult === ``) {
+        // console.log('go?')
+        await this.startAnalyze()
+      }
+      else {
+        this.parseAnalysisResult()
+      }
     },
     startAnalyze: async function () {
       
@@ -41,7 +46,7 @@ let app = {
 
       this.db.config.isAnalyzing = true
       this.db.config.resultRows = []
-
+      
       let output = []
 
       for (let i = 0; i < this.db.localConfig.files.length; i++) {
@@ -61,7 +66,7 @@ let app = {
         for (let j = 1; j < record.length; j++) {
           let row = record[j]
 
-          // console.log(row)
+          // console.log({row})
 
           let rowOutput = []
           // row = this.filterRow(row)
@@ -75,7 +80,7 @@ let app = {
 
           // console.log(row)
           if (this.db.localConfig.onlyPost && 
-             !(type === 'Topic' || type === '文章') ) {
+             !(type === 'Topic' || type === 'Topics' || type === '文章') ) {
             continue
           }
 
@@ -96,12 +101,15 @@ let app = {
         }
       }
 
+      // console.log({output}, this.db.localConfig.files.length)
+
       this.db.localConfig.analysisResult = output.map(row => row.join('\t')).join('\n')
       
       // console.log(this.db.localConfig.analysisResult)
 
     },
     parseAnalysisResult () {
+      this.db.config.isAnalyzing = true
       let analysisResult = this.db.localConfig.analysisResult
       analysisResult = analysisResult.trim()
 
@@ -156,12 +164,23 @@ let app = {
       }
 
       if (this.db.localConfig.filterSegment) {
-        text = await this.db.utils.TokenizeUtils.tokenize(text)
+        text = await this.db.utils.TokenizeUtils.tokenize(text, {
+          removeEnglish: false,
+          removeNumber: false,
+          removeHTML: true,
+          usePorterStemmer: false,
+          configStopWords: `[BASIC]`
+        })
+        // console.log(text)
         // console.error('@TODO')
       }
 
       text = this.splitTermsProcess(text, ' ')
       // text = text.trim()
+
+      // if (text.length > 0) {
+      //   console.log(text)
+      // }
 
       return text.join(' ')
     },

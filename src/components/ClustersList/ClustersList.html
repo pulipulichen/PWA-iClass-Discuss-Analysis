@@ -1,0 +1,33 @@
+<table class="ClustersList ui unstackable celled table" 
+  v-if="db.config.clusterResults.length > 0">
+  <thead id="ClusterList">
+    <tr>
+      <th>{{ $t('Count') }}</th>
+      <th>{{ $t('Terms') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(row, index) in db.config.clusterResults"
+        :id="'cluster_' + index">
+      <td :data-label="$t('Count')" valign="top" class="count">{{ row.length }}</td>
+      <td :data-label="$t('Terms')">
+				<template v-for="term in row">
+					<div class="ui labeled button" tabindex="0"
+						v-if="term.weight > 0">
+						<div class="ui button"
+							:style="{'background-color': weightToRGB(term.weight)}">
+							{{ term.text }}
+						</div>
+						<a class="ui basic label">
+							{{ term.weight }}
+						</a>
+					</div>
+					<div class="ui mini  button" tabindex="0"
+						v-else>
+						{{ term.text }}
+					</div>
+				</template>
+			</td>
+    </tr>
+  </tbody>
+</table>
