@@ -28,18 +28,9 @@ let app = {
           val = 0;
       }
 			let r, g, b
-      if (val <= 50)
-      {
-          r = Math.floor((255 * (val / 50))/2),
-          g = 255,
-          b = Math.floor((255 * (val / 50))/2);
-      }
-      else
-      {
-          r = 255,
-          g = Math.floor((100 - val) / 50 * 255/2),
-          b = Math.floor((100 - val) / 50 * 255/2);
-      }
+      r = Math.floor((255 * (val / 100))),
+      g = 255,
+      b = Math.floor((255 * (val / 100)));
       return "rgb(" + r + "," + g + "," + b + ") !important"
 		}
   }
