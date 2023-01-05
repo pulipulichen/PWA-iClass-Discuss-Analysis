@@ -155,7 +155,7 @@ export default function (app) {
 		this.cyReady = true	
 		setTimeout(() => {
 			cy.fit()
-		}, 3000)
+		}, 1000)
 	}
 
   // cyqtip(cytoscape)

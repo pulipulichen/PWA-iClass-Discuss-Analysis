@@ -53,6 +53,10 @@ let Index = {
             this.db.localConfig[key] = data[key]
           }
         }
+
+				setTimeout(() => {
+					this.$refs.NavigationBar.focus('Network')
+				}, 3000)
       })
       //console.log('設定好了')
     },

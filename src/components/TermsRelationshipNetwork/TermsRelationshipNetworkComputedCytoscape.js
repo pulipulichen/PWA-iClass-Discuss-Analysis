@@ -107,8 +107,10 @@ export default function (app) {
   function weightNormalize(map, min = 0, max = 100) {
     let values = Object.values(map)
     // console.log(values)
-    let valuesMin = Math.min(...values)
-    let valuesMax = Math.max(...values)
+    // let valuesMin = Math.min(...values)
+    // let valuesMax = Math.max(...values)
+		let valuesMin = Math.min.apply(Math, values)
+		let valuesMax = Math.max.apply(Math, values)
 
     let output = {}
     let valuesInterval = (valuesMax - valuesMin)

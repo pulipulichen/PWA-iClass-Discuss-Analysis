@@ -11,9 +11,19 @@
     <a class="item" @click="focus('Input')">
       {{ $t('Input') }}
     </a>
+		<!--
     <a class="item" @click="focus('Cloud')"
       v-if="db.config.resultRows.length > 0">
       {{ $t('Cloud') }}
+    </a>
+		-->
+		<a class="item" @click="focus('Network')"
+      v-if="db.config.resultRows.length > 0">
+      {{ $t('Network') }}
+    </a>
+		<a class="item" @click="focus('ClusterList')"
+      v-if="db.config.resultRows.length > 0">
+      {{ $t('Cluster') }}
     </a>
     <a class="item" @click="focus('CountList')"
       v-if="db.config.resultRows.length > 0">
