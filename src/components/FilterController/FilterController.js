@@ -6,13 +6,22 @@ let app = {
   data () {    
     this.$i18n.locale = this.db.localConfig.locale
     return {
-      timer: null
+      timer: null,
+      demoList: ['library'],
+      demoSelect: ''
     }
   },
   watch: {
     'db.localConfig.locale'() {
       this.$i18n.locale = this.db.localConfig.locale;
     },
+    demoSelect () {
+      if (this.demoSelect === '') {
+        return false
+      }
+      this.loadDemo()
+      this.demoSelect = ''
+    }
   },
   computed: {
     disableAnalyze () {
@@ -28,10 +37,28 @@ let app = {
     }
   },
   mounted() {
+    this.initDemo()
   },
   methods: {
     startAnalyze () {
       this.db.file.startAnalyze()
+    },
+    loadDemo: async function () {
+      let file = this.demoSelect
+      if (this.db.localConfig.analysisResult.trim() !== '') {
+        if (!window.confirm(this.$t(`Load demo will replace your current data. Are you sure you want to do it?`))) {
+          return false
+        }
+      }
+
+      this.db.localConfig.analysisResult = await this.db.utils.AxiosUtils.get(`./assets/demo/${file}.txt`)
+    },
+    initDemo: async function () {
+      await this.db.utils.AsyncUtils.sleep(3000)
+      if (this.db.localConfig.files.length === 0 && 
+          this.db.localConfig.analysisResult === '') {
+        this.demoSelect = this.demoList[0]
+      }
     }
     // filterRow (row) {
     //   if (row['類型']) {

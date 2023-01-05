@@ -99,6 +99,15 @@
 
   <div class="equal width row ui form">
     <div class="column field">
+      <select v-model="demoSelect">
+        <option value="">({{ $t('Load demo...') }})</option>
+        <option :value="file" v-for="file in demoList">{{ $t(file) }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="equal width row ui form">
+    <div class="column field">
       <textarea v-model="db.localConfig.analysisResult"
         :disabled="db.config.isAnalyzing"></textarea>
     </div>
