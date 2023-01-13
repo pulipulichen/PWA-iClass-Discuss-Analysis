@@ -5,9 +5,9 @@ let inited = false
 let api
 
 let url = 'https://pulipulichen.github.io/jieba-js/index.html?api=1'
-if (location.href.startsWith('http://127.0.0.1:')) {
-  url = 'http://127.0.0.1:5501/index.html?api=1'
-}
+// if (location.href.startsWith('http://127.0.0.1:')) {
+//   url = 'http://127.0.0.1:5501/index.html?api=1'
+// }
 
 export default {
   cache: {},
@@ -57,7 +57,7 @@ export default {
       return true
     }
     
-    api = PuliPostMessageAPI()
+    api = PuliPostMessageAPI
     inited = true
   }
 }
