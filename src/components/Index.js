@@ -13,6 +13,7 @@ let Index = {
     TagList: () => import(/* webpackChunkName: "components/TagList" */ './TagList/TagList.vue'),
 		ClustersList: () => import(/* webpackChunkName: "components/ClustersList" */ './ClustersList/ClustersList.vue'),
     TermsRelationshipNetwork: () => import(/* webpackChunkName: "components/TermsRelationshipNetwork" */ './TermsRelationshipNetwork/TermsRelationshipNetwork.vue'),
+    ScoreList: () => import(/* webpackChunkName: "components/ScoreList" */ './ScoreList/ScoreList.vue'),
   },
   data() {
     this.$i18n.locale = this.db.config.localConfig

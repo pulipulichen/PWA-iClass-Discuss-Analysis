@@ -1,5 +1,6 @@
 <div class="TagCloud ui raised segment" 
   :class="{invisible: (db.config.resultRows.length === 0)}"
-  id="Cloud">
+  id="Cloud"
+  v-show="db.localConfig.anaylyzeContent">
   <div id="jqcloud" ref="jqcloud"></div>
 </div>

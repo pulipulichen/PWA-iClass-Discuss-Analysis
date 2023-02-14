@@ -1,0 +1,86 @@
+<div class="ScoreList"
+  v-show="db.config.scores.length > 0">
+  <div class="equal width ui grid form">
+    <div class="column field">
+      <label>
+        {{ $t('Start') }}
+        <span :class="{warning: (zeroCountStart > 0)}">
+          ({{ zeroCountStart }})
+        </span>:
+        <button type="button" class="ui tiny button"
+          @click="scoreStartTimeManual = displayTimeYear(scoreStartTime)"
+          :class="{disabled: scoreStartTimeManual == displayTimeYear(scoreStartTime)}">
+          {{ displayTime(scoreStartTime) }}
+        </button>
+        <button type="button" class="ui tiny button"
+          v-if="displayTime(scoreStartTimeRecommand) !== displayTime(scoreStartTime)"
+          :class="{disabled: scoreStartTimeManual == displayTimeYear(scoreStartTimeRecommand)}"
+          @click="scoreStartTimeManual = displayTimeYear(scoreStartTimeRecommand)">
+          {{ displayTime(scoreStartTimeRecommand) }}
+        </button>
+
+      </label>
+      <input type="text" id="scoreStartTime"
+        :class="{warning: (scoreStartTimeManual !== displayTimeYear(scoreStartTime))}"
+        v-model="scoreStartTimeManual" />
+    </div>
+    <div class="column field">
+      <label>
+        {{ $t('End') }}
+        <span :class="{warning: (zeroCountEnd > 0)}">
+          ({{ zeroCountEnd }})
+        </span>:
+        <button type="button" class="ui tiny button"
+          v-if="displayTime(scoreEndTimeRecommand) !== displayTime(scoreEndTimeTodayObject)"
+          :class="{disabled: scoreEndTimeManual == displayTimeYear(scoreEndTimeTodayObject)}"
+          @click="scoreEndTimeManual = displayTimeYear(scoreEndTimeTodayObject)">
+          {{ displayTime(scoreEndTimeTodayObject) }}
+        </button>
+        <button type="button" class="ui tiny button"
+          v-if="displayTime(scoreEndTimeRecommand) !== displayTime(scoreEndTime)"
+          :class="{disabled: scoreEndTimeManual == displayTimeYear(scoreEndTimeRecommand)}"
+          @click="scoreEndTimeManual = displayTimeYear(scoreEndTimeRecommand)">
+          {{ displayTime(scoreEndTimeRecommand) }}
+        </button>
+        <button type="button" class="ui tiny button"
+          :class="{disabled: scoreEndTimeManual == displayTimeYear(scoreEndTime)}"
+          @click="scoreEndTimeManual = displayTimeYear(scoreEndTime)">
+          {{ displayTime(scoreEndTime) }}
+        </button>
+
+      </label>
+      <input type="text" id="scoreEndTime"
+        :class="{warning: (scoreEndTimeManual !== displayTimeYear(scoreEndTime))}"
+        v-model="scoreEndTimeManual" />
+    </div>
+  </div>
+  <div class="equal width ui grid form">
+    <div class="column field">
+      <textarea v-html="scoringScript"
+        @focus="copyScript"></textarea>
+    </div>
+  </div>
+  <div class="score-list">
+    <table class="ui table">
+      <thead>
+        <tr>
+          <th>{{ $t('ID') }}</th>
+          <th>{{ $t('First Time') }}</th>
+          <th>{{ $t('Title') }}</th>
+          <th>{{ $t('Content') }}</th>
+          <th>{{ $t('Score') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(score, i) in scores"
+          :class="{warning: (finalScores[i] === 0)}">
+          <td>{{ score.id }}</td>
+          <td>{{ displayTime(score.time) }}</td>
+          <td :title="score.title">({{ score.title.length}}) {{ score.title }}</td>
+          <td :title="score.content">({{ score.content.length}}) {{ score.content }}</td>
+          <td>{{ finalScores[i] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

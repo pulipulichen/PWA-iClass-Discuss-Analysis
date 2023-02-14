@@ -76,26 +76,43 @@ export default function (app) {
       filename = forumInformation
     }
 
-    let fileItem = this.db.localConfig.files.filter(file => {
-      return (file.filename === filename)
-    })
-
+    let fileItem = []
+    if (Array.isArray(this.db.localConfig.files)) {
+      fileItem = this.db.localConfig.files.filter(file => {
+        return (file.filename === filename)
+      })
+    }
+      
     // console.log(data)
+    // console.log(fileItem)
 
     if (fileItem.length > 0) {
       fileItem = fileItem[0]
     }
     else {
-      this.db.localConfig.files.push({
-        filename,
-        enable: true,
-        content: data
-      })
-
-      if (this.db.localConfig.analysisResult === ``) {
-        // console.log('startAnalyze')
-        this.startAnalyze()
+      if (this.db.localConfig.singleFileAnalysisMode) {
+        this.db.localConfig.files = []
+        
+        this.db.localConfig.files.push({
+          filename,
+          enable: true,
+          content: data
+        })
+        // console.log(this.db.localConfig.files)
       }
+      else {
+        this.db.localConfig.files.push({
+          filename,
+          enable: true,
+          content: data
+        })
+      }
+    }
+
+    if (this.db.localConfig.singleFileAnalysisMode || 
+      this.db.localConfig.analysisResult === ``) {
+      // console.log('startAnalyze')
+      this.startAnalyze()
     }
   }
 

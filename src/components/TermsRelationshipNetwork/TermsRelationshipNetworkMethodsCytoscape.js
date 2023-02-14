@@ -79,10 +79,11 @@ export default function (app) {
     // initialLayout.pon('layoutstart').then(function( event ){
     //   constraints.fixedNodeConstraint = JSON.parse(JSON.stringify(fixedNodeConstraint));
     // });
+
     initialLayout.run();
     
 		// setTimeout(() => {
-			this.cluster(cy)
+		this.cluster(cy)
 		// }, 3000)
   }
 

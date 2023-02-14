@@ -17,4 +17,8 @@
     <i class="trash icon"></i>
     {{ $t('Clean') }}
   </button>
+  <div class="inline checkbox field">
+    <input type="checkbox" id="singleFileAnalysisMode" v-model="db.localConfig.singleFileAnalysisMode" />
+    <label for="singleFileAnalysisMode">{{ $t('Single File Mode') }}</label>
+  </div>
 </div>

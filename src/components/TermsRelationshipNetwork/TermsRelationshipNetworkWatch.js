@@ -6,7 +6,9 @@ export default function (app) {
     }
 
     // setTimeout(() => {
-    this.initCytoscapeVis()
+    if (this.db.localConfig.anaylyzeContent) {
+      this.initCytoscapeVis()
+    }
     // }, 100)
   }
 
@@ -16,6 +18,9 @@ export default function (app) {
     }
 
     // setTimeout(() => {
-    this.initCytoscapeVis()
+    if (this.db.localConfig.anaylyzeContent) {
+      this.initCytoscapeVis()
+    }
+      
   }
 }

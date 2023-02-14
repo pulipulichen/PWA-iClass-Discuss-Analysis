@@ -4,10 +4,22 @@
       {{ $t('Filters') }}
     </h2>
   </div>
-    
-
+  
   <div class="equal width row"
     v-if="db.localConfig.files.length > 0">
+
+    <div class="column">
+      <div class="ui checkbox">
+        <input type="checkbox" 
+          v-model="db.localConfig.anaylyzeContent"
+          id="filter_anaylyzeContent" />
+        <label
+          for="filter_anaylyzeContent">
+          {{ $t('Analyze Content') }}
+        </label>
+      </div>
+    </div>
+
     <div class="column">
       <div class="ui checkbox">
         <input type="checkbox" 
@@ -97,7 +109,8 @@
     </div>
   </div>
 
-  <div class="equal width row ui form">
+  <div class="equal width row ui form"
+    v-show="db.localConfig.anaylyzeContent">
     <div class="column field">
       <select v-model="demoSelect">
         <option value="">({{ $t('Load demo...') }})</option>
@@ -106,7 +119,8 @@
     </div>
   </div>
 
-  <div class="equal width row ui form">
+  <div class="equal width row ui form"
+    v-show="db.localConfig.anaylyzeContent">
     <div class="column field">
       <textarea v-model="db.localConfig.analysisResult"
         :disabled="db.config.isAnalyzing"></textarea>

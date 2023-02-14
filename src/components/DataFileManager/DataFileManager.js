@@ -48,6 +48,11 @@ let app = {
       this.db.config.resultRows = []
       
       let output = []
+      // let scores = []
+
+      // let scoreDateStart = null
+      // let scoreDateEnd = null
+      let students = {}
 
       for (let i = 0; i < this.db.localConfig.files.length; i++) {
         let file = this.db.localConfig.files[i]
@@ -74,7 +79,23 @@ let app = {
           let role = row[8]
 
           let title = row[3]
+          if (typeof(title) === 'string') {
+            title = title.trim()
+          }
           let content = row[9]
+          if (typeof(content) === 'string') {
+            content = content.trim()
+          }
+
+          let time = new Date(row[4])
+          // if (!scoreDateStart || time < scoreDateStart) {
+          //   scoreDateStart = time
+          // }
+          // if (!scoreDateEnd || time > scoreDateEnd) {
+          //   scoreDateEnd = time
+          // }
+
+          let id = Number(row[7])
 
           // console.log({type, role, title, content})
 
@@ -89,22 +110,60 @@ let app = {
             continue
           }
 
-          if (this.db.localConfig.targetFieldTitle) {
-            rowOutput.push(await this.filterText(title))
+          if (this.db.localConfig.anaylyzeContent) {
+            if (this.db.localConfig.targetFieldTitle) {
+              rowOutput.push(await this.filterText(title))
+            }
+
+            if (this.db.localConfig.targetFieldContent) {
+              rowOutput.push(await this.filterText(content))
+            }
+
+            output.push(rowOutput)
           }
 
-          if (this.db.localConfig.targetFieldContent) {
-            rowOutput.push(await this.filterText(content))
+          // scores.push({
+          //   id,
+          //   time,
+          //   title,
+          //   content
+          // })
+          if (!students[id]) {
+            students[id] = {
+              time,
+              title,
+              content
+            }
           }
-
-          output.push(rowOutput)
+          else {
+            let before = students[id]
+            students[id] = {
+              time: Math.min(time, before.time),
+              title: (title + ' ' + before.title).trim(),
+              content: (content + ' ' + before.content).trim(),
+            }
+          }
         }
       }
 
       // console.log({output}, this.db.localConfig.files.length)
 
       this.db.localConfig.analysisResult = output.map(row => row.join('\t')).join('\n')
+
+      let idList = Object.keys(students)
+      idList.sort()
       
+      this.db.config.scores = idList.map(id => {
+        let s = students[id]
+        return {
+          id,
+          time: s.time,
+          title: s.title,
+          content: s.content,
+        }
+      })
+      // console.log(this.db.config.scores)
+
       // console.log(this.db.localConfig.analysisResult)
 
     },

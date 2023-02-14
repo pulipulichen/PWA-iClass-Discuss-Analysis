@@ -1,5 +1,6 @@
 <table class="ClustersList ui unstackable celled table" 
-  v-if="db.config.clusterResults.length > 0">
+  v-if="db.config.clusterResults.length > 0"
+	v-show="db.localConfig.anaylyzeContent">
   <thead id="ClusterList">
     <tr>
       <th>{{ $t('Count') }}</th>

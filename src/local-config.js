@@ -1,5 +1,6 @@
 let localConfig = {
   files: [],
+  anaylyzeContent: true,
   filterColon: true,
   filterSlash: true,
   // filterSpace: true,
@@ -8,7 +9,8 @@ let localConfig = {
   onlyStudent: true,
   targetFieldTitle: true,
   targetFieldContent: true,
-  analysisResult: ``
+  analysisResult: ``,
+  singleFileAnalysisMode: true
 }
 
 // ----------------------------------------------------------------

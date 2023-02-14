@@ -4,7 +4,10 @@ let config = {
   version: '20230103-1153',
   resultRows: [],
 	clusterResults: [],
-  isAnalyzing: false
+  isAnalyzing: false,
+  scores: [],
+  // scoreDateStart: null,
+  // scoreDateEnd: null,
 }
 
 // ----------------------------------------------------------------

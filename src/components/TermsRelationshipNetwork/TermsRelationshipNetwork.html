@@ -1,5 +1,6 @@
 <div class="TermsRelationshipNetwork"
 	id="Network"
-	:class="{hide: !cyReady}">  
+	:class="{hide: !cyReady}"
+	v-show="db.localConfig.anaylyzeContent">  
   <div id="cy" ref="cy"></div>
 </div>
